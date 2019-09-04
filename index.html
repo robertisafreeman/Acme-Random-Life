@@ -55,6 +55,13 @@
                 storage.setItem('userId', user.id);
                 return  user;
             };
+            const noteString = "The cat went for a walk. The dog learned how to talk. The monkey went to bed. The gorilla invented the pillow."
+            const randomNote = (str) => {
+                const arr = str.split(".")
+                const index = Math.floor(Math.random() * arr.length)
+                return {text: arr[index].trim()}
+    
+            }
 
             const { render } = ReactDOM;
             const { Component } = React;
@@ -70,13 +77,27 @@
                             following: [],
                             error: ''
                         };
-                        this.destroy = this.destroy.bind(this)
+                        this.destroyNotes = this.destroyNotes.bind(this)
+                        this.destroyFollowing = this.destroyFollowing.bind(this)
+                        this.create = this.create.bind(this)
                 }
-                async destroy(note) {
+                async destroyNotes(note) {
                     await axios.delete(`${API}/users/${this.state.user.id}/notes/${note.id}`);
                     this.setState({notes : this.state.notes.filter(_note => _note.id !== note.id)});
                 }
-
+                async destroyFollowing(follow) {
+                    await axios.delete(`${API}/users/${this.state.user.id}/followingCompanies/${follow.id}`);
+                    this.setState({following : this.state.following.filter(_follow => _follow.id !== follow.id)})
+                }
+                async destroyVacations(vacay){
+                    await axios.delete(`${API}/users/${this.state.user.id}/vacations/${vacay.id}`);
+                    this.setState({vacations : this.state.vacations.filter(_vacay => _vacay.id !== vacay.id) })
+                }
+                async create(note){
+                    const text = randomNote(noteString)
+                    const notes = [...this.state.notes, text ];
+                    this.setState({ notes }); 
+                }
                 async componentDidMount(){
                     const user = await fetchUser();
                     const vacations = (await axios.get(`${API}/users/${user.id}/vacations`)).data;
@@ -87,7 +108,7 @@
 
                 render(){
                     const { error, user, companies, vacations, following, notes } = this.state;
-                    const { destroy } = this;
+                    const { destroyNotes, destroyFollowing,  create } = this;
                         return (
                             <div>
                             <h1>The Acme Random Life</h1>
@@ -95,14 +116,14 @@
                             <div className='error'>{ error }</div>
                                 <div id='notes'>
                                     <h2>Notes({ notes.length })</h2>
-                                    <button> Add a Random Note </button>
+                                    <button onClick={()=> create(notes)}> Add a Random Note </button>
                                     <ul>
                                         {
                                         notes.map(note => 
                                         <li key={ note.id }>
                                         { note.text }
                                         <br/>
-                                        <button className='destroy' onClick={()=> destroy(note)}>Destroy</button>
+                                        <button className='destroy' onClick={()=> destroyNotes(note)}>Destroy</button>
                                         </li>)
                                         }
                                     </ul>
@@ -117,7 +138,7 @@
                                             <li key={ follow.id }>
                                             { follow.id }
                                             <br/>
-                                            <button className='destroy' onClick={()=> destroy(follow)}>Destroy</button>
+                                            <button className='destroy' onClick={()=> destroyFollowing(follow)}>Destroy</button>
                                             </li>)
                                             }
                                         </ul>
