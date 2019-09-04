@@ -10,6 +10,22 @@
         ul{
             list-style: none;
         }
+        body{
+            font-family: verdana;
+        }
+        button{
+            height: 2rem;
+            font-size: 1rem;
+        }
+        .destroy{
+            height: 1.5rem;
+            font-size: 0.5rem;
+            width: 100%
+        }
+        hr{
+            border-color: orange;
+        }
+        
     </style>
 
     </head>
@@ -22,7 +38,7 @@
         <script type='text/babel'>
 
             const API = 'https://acme-users-api-rev.herokuapp.com/api';
-
+            
             const fetchUser = async ()=> {
                 const storage = window.localStorage;
                 const userId = storage.getItem('userId'); 
@@ -77,57 +93,51 @@
                             <h1>The Acme Random Life</h1>
                             Welcome { user.fullName } to your Random Life!
                             <div className='error'>{ error }</div>
-                            <div className='notes'>
+                                <div id='notes'>
                                 <h2>Notes({ notes.length })</h2>
                                 <button> Add a Random Note </button>
-                                <div>
                                     <ul>
                                         {
-                                            notes.map(note => 
-                                            <li key={ note.id }>
-                                            { note.text }
-                                            <br/>
-                                            <button onClick={()=> destroy(note)}>Destroy</button>
-                                            </li>)
+                                        notes.map(note => 
+                                        <li key={ note.id }>
+                                        { note.text }
+                                        <br/>
+                                        <button className='destroy' onClick={()=> destroy(note)}>Destroy</button>
+                                        </li>)
                                         }
                                     </ul>
-                                </div>
                                 <hr/>
-                            </div>
-                            <div className='followingCompanies'>
+                                </div>
+                                <div id='followingCompanies'>
                                 <h2>FollowingCompanies({ following.length })</h2>
                                 <button> Add a Random Following Company </button>
-                                <div>
                                     <ul>
                                         {
                                             following.map(follow => 
                                             <li key={ follow.id }>
                                             { follow.id }
                                             <br/>
-                                            <button onClick={()=> destroy(follow)}>Destroy</button>
+                                            <button className='destroy' onClick={()=> destroy(follow)}>Destroy</button>
                                             </li>)
                                         }
                                     </ul>
-                                </div>
                                 <hr/>
-                            </div>
-                            <div className='vacations'>
+                                </div>
+                                <div id='vacations'>
                                 <h2>Vacations({vacations.length})</h2>
                                 <button> Add a Random Vacation</button>
-                                <div>
                                     <ul>
                                         {
                                             vacations.map(vacay => 
                                             <li key={ vacay.id }>
                                             { vacay.text }
                                             <br/>
-                                            <button onClick={()=> destroy(vacay)}>Destroy</button>
+                                            <button className='destroy' onClick={()=> destroy(vacay)}>Destroy</button>
                                             </li>)
                                         }
                                     </ul>
-                                </div>
                                 <hr/>
-                            </div>
+                                </div>
                             </div>
                         );
                 }
