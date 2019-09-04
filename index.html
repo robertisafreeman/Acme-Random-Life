@@ -56,6 +56,8 @@
                 return  user;
             };
 
+                
+
             const { render } = ReactDOM;
             const { Component } = React;
 
@@ -87,9 +89,16 @@
                     this.setState({vacations : this.state.vacations.filter(_vacay => _vacay.id !== vacay.id) })
                 }
                 async create(note){
-                    const created = (await axios.post(`${API}/users/${this.state.user.id}/notes`, note)).data;
-                    const notes = [...this.state.notes, created ];
-                    this.setState({ notes }); 
+                    const noteString = "The cat went for a walk. The dog learned how to talk. The monkey went to bed. The gorilla invented the pillow."
+                    const randomNote = (str) => {
+                        const arr = str.split(".")
+                        const index = Math.floor(Math.random() * arr.length)
+                        return {text: arr[index].trim()}
+                    }
+                    const payload = randomNote(noteString)
+                    const created = (await axios.post(`${API}/users/${this.state.user.id}/notes`, payload)).data;
+                    const notes = [...this.state.notes, created]
+                    this.setState({notes})
                 }
 
                 async componentDidMount(){
