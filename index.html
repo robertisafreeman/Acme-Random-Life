@@ -74,7 +74,7 @@
                         };
                         this.destroyNotes = this.destroyNotes.bind(this)
                         this.destroyFollowing = this.destroyFollowing.bind(this)
-                        this.create = this.create.bind(this)
+                        this.createNote = this.createNote.bind(this)
                 }
                 async destroyNotes(note) {
                     await axios.delete(`${API}/users/${this.state.user.id}/notes/${note.id}`);
@@ -84,12 +84,12 @@
                     await axios.delete(`${API}/users/${this.state.user.id}/followingCompanies/${follow.id}`);
                     this.setState({following : this.state.following.filter(_follow => _follow.id !== follow.id)})
                 }
-                async destroyVacations(vacay){
+                async destroyVacation(vacay){
                     await axios.delete(`${API}/users/${this.state.user.id}/vacations/${vacay.id}`);
                     this.setState({vacations : this.state.vacations.filter(_vacay => _vacay.id !== vacay.id) })
                 }
-                async create(note){
-                    const noteString = "The cat went for a walk. The dog learned how to talk. The monkey went to bed. The gorilla invented the pillow."
+                async createNote(note) {
+                    const noteString = "Now, this is a story, all about how - my life got flipped/turned upside-down. Now, I'd like to take a minute, just sit right there. I'll tell you how I became the prince of a town called Bel-Air. In West Philadelphia, born and raised. On the playground, is where I spent most of my days. Chilling out, maxing, relaxing all cool, and all shooting some b-ball outside of the school. When a couple of guys who were up to no good, started making trouble in my neighborhood. I got in one little fight and my mom got scared, and said 'You're moving with your auntie and uncle in Bel-Air'.  "
                     const randomNote = (str) => {
                         const arr = str.split(".")
                         const index = Math.floor(Math.random() * arr.length)
@@ -99,6 +99,19 @@
                     const created = (await axios.post(`${API}/users/${this.state.user.id}/notes`, payload)).data;
                     const notes = [...this.state.notes, created]
                     this.setState({notes})
+                }
+                async createFollowing(follow) {
+                    console.log(follow)
+                }
+                async createVacation(vacay) {
+                    const start = moment('1/1/2019')
+                    const end = moment('12/30/2019');
+                    function randomDate(begin, finish) {
+                        const string = `${begin._i} - ${finish._i}`
+                        return string
+                    }
+
+                    return randomDate(start, end)
                 }
 
                 async componentDidMount(){
@@ -111,7 +124,7 @@
 
                 render(){
                     const { error, user, companies, vacations, following, notes } = this.state;
-                    const { destroyNotes, destroyFollowing,  create } = this;
+                    const { createNote, destroyNotes, createFollowing, destroyFollowing, createVacation, destroyVacation } = this;
                         return (
                             <div>
                             <h1>The Acme Random Life</h1>
@@ -119,7 +132,7 @@
                             <div className='error'>{ error }</div>
                                 <div id='notes'>
                                     <h2>Notes({ notes.length })</h2>
-                                    <button onClick={()=> create(notes)}> Add a Random Note </button>
+                                    <button onClick={()=> createNote(notes)}> Add a Random Note </button>
                                     <ul>
                                         {
                                         notes.map(note => 
@@ -134,7 +147,7 @@
                                 </div>
                                 <div id='followingCompanies'>
                                     <h2>FollowingCompanies({ following.length })</h2>
-                                    <button> Add a Random Following Company </button>
+                                    <button onClick={()=> createFollowing(following)}> Add a Random Following Company </button>
                                         <ul>
                                             {
                                             following.map(follow => 
@@ -149,14 +162,14 @@
                                 </div>
                                 <div id='vacations'>
                                     <h2>Vacations({vacations.length})</h2>
-                                    <button> Add a Random Vacation</button>
+                                    <button onClick={()=> createVacation(vacations)}> Add a Random Vacation</button>
                                         <ul>
                                             {
                                             vacations.map(vacay => 
                                             <li key={ vacay.id }>
                                             { vacay.text }
                                             <br/>
-                                            <button className='destroy' onClick={()=> destroy(vacay)}>Destroy</button>
+                                            <button className='destroy' onClick={()=> destroyVacation(vacay)}>Destroy</button>
                                             </li>)
                                             }
                                         </ul>
