@@ -105,19 +105,19 @@
                 async createFollowing(follow) {
                     const companyString = "Activision Blizzard. Adidas. Aegon. Airbus. Alliance Global Group Inc. Amazon. Apple. AT&T. Facebook. FedEx. Ford Motor Company. Garmin. Gillette. Google. Hearst Corporation. Heinekin. Hewlett Packard Enterprise. Honda. Honeywell. Partners In Health. Pfizer. Pornhub. Proctor & Gamble. Red Bull. Royal Bank of Canada. Bacardi. Baskin-Robbins. Bayer. Bridgestone. Hutchinson Whampoa Limited. Illinois Tool Works. Instagram. Johnson & Johnson. Schneider Electric."
                     const randomComp = (str) => {
-                        const arr = str.split(".");
+                        const arr = str.split(".")
                         const index = Math.floor(Math.random() * arr.length)
                         return { text: arr[index].trim()}
                     }
                     const payload = randomComp(companyString);
-                    const created = (await axios.post(`${API}/users/${this.state.user.id}/notes`, payload)).data;
+                    const created = (await axios.post(`${API}/users/${this.state.user.id}/followingCompanies`, payload)).data;
                     const following = [...this.state.following, created];
                     this.setState({ following })
                 }
                 async createVacation(vacay) {
                     const randomTime = moment();
                     const payload = {text: randomTime};
-                    const created = (await axios.post(`${API}/users/${this.state.user.id}/notes`, payload)).data;
+                    const created = (await axios.post(`${API}/users/${this.state.user.id}/vacations`, payload)).data;
                     const vacations = [...this.state.vacations, created];
                     this.setState({vacations})
                 }
