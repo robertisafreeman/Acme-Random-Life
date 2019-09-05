@@ -75,6 +75,8 @@
                         this.destroyNotes = this.destroyNotes.bind(this)
                         this.destroyFollowing = this.destroyFollowing.bind(this)
                         this.createNote = this.createNote.bind(this)
+                        this.createVacation = this.createVacation.bind(this)
+                        this.createFollowing = this.createFollowing.bind(this)
                 }
                 async destroyNotes(note) {
                     await axios.delete(`${API}/users/${this.state.user.id}/notes/${note.id}`);
@@ -95,23 +97,29 @@
                         const index = Math.floor(Math.random() * arr.length)
                         return {text: arr[index].trim()}
                     }
-                    const payload = randomNote(noteString)
+                    const payload = randomNote(noteString);
                     const created = (await axios.post(`${API}/users/${this.state.user.id}/notes`, payload)).data;
-                    const notes = [...this.state.notes, created]
+                    const notes = [...this.state.notes, created];
                     this.setState({notes})
                 }
                 async createFollowing(follow) {
-                    console.log(follow)
+                    const companyString = "Activision Blizzard. Adidas. Aegon. Airbus. Alliance Global Group Inc. Amazon. Apple. AT&T. Facebook. FedEx. Ford Motor Company. Garmin. Gillette. Google. Hearst Corporation. Heinekin. Hewlett Packard Enterprise. Honda. Honeywell. Partners In Health. Pfizer. Pornhub. Proctor & Gamble. Red Bull. Royal Bank of Canada. Bacardi. Baskin-Robbins. Bayer. Bridgestone. Hutchinson Whampoa Limited. Illinois Tool Works. Instagram. Johnson & Johnson. Schneider Electric."
+                    const randomComp = (str) => {
+                        const arr = str.split(".");
+                        const index = Math.floor(Math.random() * arr.length)
+                        return { text: arr[index].trim()}
+                    }
+                    const payload = randomComp(companyString);
+                    const created = (await axios.post(`${API}/users/${this.state.user.id}/notes`, payload)).data;
+                    const following = [...this.state.following, created];
+                    this.setState({ following })
                 }
                 async createVacation(vacay) {
-                    const start = moment('1/1/2019')
-                    const end = moment('12/30/2019');
-                    function randomDate(begin, finish) {
-                        const string = `${begin._i} - ${finish._i}`
-                        return string
-                    }
-
-                    return randomDate(start, end)
+                    const randomTime = moment();
+                    const payload = {text: randomTime};
+                    const created = (await axios.post(`${API}/users/${this.state.user.id}/notes`, payload)).data;
+                    const vacations = [...this.state.vacations, created];
+                    this.setState({vacations})
                 }
 
                 async componentDidMount(){
